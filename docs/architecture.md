@@ -21,7 +21,7 @@ flowchart TD
 
 An investigation request validates the indicator, stores a job, and returns immediately. In local demo mode the job runs in process. In Compose the worker runs it. Steps are collect, normalise, extract relationships, score, analyse, optionally project, and write a report.
 
-Observations are appended. A later retrieval does not delete an earlier observation. `observed_at` is the time the source gives for the event. `retrieved_at` is when PIAE stored the row.
+Observations are appended. A later retrieval does not delete an earlier observation. `observed_at` is the time the source gives for the event. `retrieved_at` is when Acelab OSINT stored the row.
 
 ## Scoring
 
@@ -29,7 +29,7 @@ Observations are appended. A later retrieval does not delete an earlier observat
 
 ## Campaign memory
 
-After collection, PIAE compares rare artifacts in the investigation with that analyst's saved cases. A rare artifact is a kit structure (distinctive form fields and script names), a non-generic logo path, an uncommon nameserver, or a contact that is not privacy-redacted. Public DNS and artifacts shared by many saved cases stay off the graph. A match records the shared artifact. It does not name an operator and it does not assert that an asset is malicious. The graph payload includes those matches and a timeline of published registration dates, earliest certificate not-before dates, and Wayback capture dates.
+After collection, Acelab OSINT compares rare artifacts in the investigation with that analyst's saved cases. A rare artifact is a kit structure (distinctive form fields and script names), a non-generic logo path, an uncommon nameserver, or a contact that is not privacy-redacted. Public DNS and artifacts shared by many saved cases stay off the graph. A match records the shared artifact. It does not name an operator and it does not assert that an asset is malicious. The graph payload includes those matches and a timeline of published registration dates, earliest certificate not-before dates, and Wayback capture dates.
 
 ## Demonstration graph
 

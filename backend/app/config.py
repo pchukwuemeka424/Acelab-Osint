@@ -6,7 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
-    app_name: str = "PIAE"
+    app_name: str = "Acelab OSINT"
     environment: str = "development"
     debug: bool = False
     secret_key: str = "dev-only-change-me"

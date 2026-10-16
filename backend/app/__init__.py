@@ -1,1 +1,1 @@
-"""Phishing Infrastructure Attribution Engine."""
+"""Acelab OSINT."""

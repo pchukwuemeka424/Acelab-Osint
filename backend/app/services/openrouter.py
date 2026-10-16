@@ -36,7 +36,7 @@ def maybe_narrate(packet: dict, settings: Settings | None = None, fetcher=None) 
     headers = {
         "Authorization": f"Bearer {settings.openrouter_api_key}",
         "HTTP-Referer": settings.openrouter_referer,
-        "X-Title": "PIAE",
+        "X-Title": "Acelab OSINT",
         "Content-Type": "application/json",
     }
     try:

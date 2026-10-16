@@ -1,6 +1,6 @@
 # Security and threat model
 
-PIAE is a defensive investigation tool. It does not scan for exploits, collect credentials, or take response actions. Report text is not executed.
+Acelab OSINT is an information-gathering and footprinting workspace. It does not scan for exploits, collect credentials, or take response actions. Report text is not executed.
 
 ## What is protected
 

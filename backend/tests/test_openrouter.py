@@ -39,5 +39,5 @@ def test_narrative_stays_on_openrouter_and_flags_unknown_ids():
     assert status == "generated"
     assert seen["url"] == "https://openrouter.ai/api/v1/chat/completions"
     assert seen["purpose"] == "openrouter"
-    assert seen["title"] == "PIAE"
+    assert seen["title"] == "Acelab OSINT"
     assert "not findings" in text

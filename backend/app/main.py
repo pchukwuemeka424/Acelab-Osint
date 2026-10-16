@@ -27,7 +27,7 @@ async def lifespan(app: FastAPI):
 
 def create_app() -> FastAPI:
     settings = get_settings()
-    app = FastAPI(title="PIAE", debug=settings.debug, lifespan=lifespan)
+    app = FastAPI(title="Acelab OSINT", debug=settings.debug, lifespan=lifespan)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origin_list,

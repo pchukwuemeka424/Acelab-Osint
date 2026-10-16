@@ -200,7 +200,7 @@ def fetch_recorded_image(
     limit: int = 524288,
 ) -> tuple[bytes, str]:
     assert_public_destination(url, resolver=resolver)
-    headers = {"User-Agent": "PIAE", "Accept": "image/*"}
+    headers = {"User-Agent": "Acelab-OSINT", "Accept": "image/*"}
     with httpx.Client(timeout=timeout, follow_redirects=False, trust_env=False) as client:
         response = client.get(url, headers=headers)
         if response.status_code in {301, 302, 303, 307, 308}:
@@ -258,7 +258,7 @@ def fetch_public_subject(
     limit: int = 262144,
 ) -> httpx.Response:
     assert_subject_url(url, expected_host, resolver=resolver)
-    headers = {"User-Agent": "PIAE"}
+    headers = {"User-Agent": "Acelab-OSINT"}
     with httpx.Client(timeout=timeout, follow_redirects=False, trust_env=False) as client:
         response = client.get(url, headers=headers)
         if response.status_code in {301, 302, 303, 307, 308}:

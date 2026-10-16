@@ -1,0 +1,104 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: piae
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-piae-dev-password}
+      POSTGRES_DB: piae
+      PIAE_APP_PASSWORD: ${PIAE_APP_PASSWORD:-piae-app-dev}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/postgres/init.sh:/docker-entrypoint-initdb.d/init.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U piae -d piae"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  api:
+    build: ./backend
+    environment:
+      ENVIRONMENT: development
+      DEBUG: "false"
+      SECRET_KEY: ${SECRET_KEY:-dev-only-change-me}
+      DATABASE_URL: postgresql+psycopg://piae_app:${PIAE_APP_PASSWORD:-piae-app-dev}@db:5432/piae
+      REDIS_URL: redis://redis:6379/0
+      INVESTIGATION_EAGER: "false"
+      AUTO_CREATE: "false"
+      SEED_ON_STARTUP: "true"
+      DEMO_MODE: "false"
+      DNS_ENABLED: "true"
+      RDAP_ENABLED: "true"
+      CT_ENABLED: "true"
+      RIPE_ENABLED: "true"
+      WAYBACK_ENABLED: "true"
+      PAGE_ENABLED: "true"
+      ANALYST_EMAIL: ${ANALYST_EMAIL:-analyst@piae.test}
+      ANALYST_PASSWORD: ${ANALYST_PASSWORD:-changeme-dev-only}
+      ANALYST_DISPLAY_NAME: ${ANALYST_DISPLAY_NAME:-analyst}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@piae.test}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-changeme-admin-dev-only}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-openai/gpt-4o-mini}
+      OPENROUTER_REFERER: ${OPENROUTER_REFERER:-http://localhost}
+      NEO4J_URI: ${NEO4J_URI:-}
+      NEO4J_USER: ${NEO4J_USER:-neo4j}
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD:-}
+      CORS_ORIGINS: http://localhost:8080
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health')"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 25s
+    restart: unless-stopped
+  worker:
+    build: ./backend
+    entrypoint: ["celery", "-A", "app.workers.celery_app:celery", "worker", "--loglevel=INFO"]
+    environment:
+      DATABASE_URL: postgresql+psycopg://piae_app:${PIAE_APP_PASSWORD:-piae-app-dev}@db:5432/piae
+      REDIS_URL: redis://redis:6379/0
+      DEMO_MODE: "false"
+      DNS_ENABLED: "true"
+      RDAP_ENABLED: "true"
+      CT_ENABLED: "true"
+      RIPE_ENABLED: "true"
+      WAYBACK_ENABLED: "true"
+      PAGE_ENABLED: "true"
+      AUTO_CREATE: "false"
+      SEED_ON_STARTUP: "false"
+      SECRET_KEY: ${SECRET_KEY:-dev-only-change-me}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-openai/gpt-4o-mini}
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+  web:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      api:
+        condition: service_healthy
+  neo4j:
+    image: neo4j:5
+    profiles: ["neo4j"]
+    environment:
+      NEO4J_AUTH: ${NEO4J_USER:-neo4j}/${NEO4J_PASSWORD:-neo4j-dev-password}
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+volumes:
+  pgdata:

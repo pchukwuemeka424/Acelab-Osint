@@ -1,0 +1,17 @@
+fastapi==0.143.2
+uvicorn[standard]==0.54.0
+pydantic==2.14.1
+pydantic-settings==2.16.0
+SQLAlchemy==2.1.4
+alembic==1.20.0
+psycopg[binary]==3.3.6
+celery==5.6.3
+redis==8.1.0
+networkx==3.7
+neo4j==6.4.1
+httpx==0.28.1
+dnspython==2.9.0
+argon2-cffi==25.1.0
+itsdangerous==2.2.0
+python-json-logger==4.2.0
+pytest==9.1.1
